@@ -10,8 +10,12 @@ namespace TesteBackend.Controllers
     [ApiController]
     public class ClienteController : ControllerBase
     {
+        // Configurações de conexão do banco
+        
         private string _connectionString = "Server=localhost;Database=testebackend;Uid=root;Pwd=;";
 
+        // Inicio da requisição GET
+        
         [HttpGet("{id}")]
         public IActionResult ObterDadosPorId(int id)
         {
@@ -46,7 +50,7 @@ namespace TesteBackend.Controllers
 
                 if (dados.Count == 0)
                 {
-                    return StatusCode(404, $"Nenhum resultado encontrado para esse ID"); // Retorna 404 Not Found se nenhum resultado for encontrado
+                    return StatusCode(404, $"Nenhum resultado encontrado para esse ID");
                 }
 
                 return Ok(dados);
@@ -57,6 +61,8 @@ namespace TesteBackend.Controllers
             }
         }
 
+         // Inicio da requisição POST
+         
         [HttpPost]
         public IActionResult CriarCliente([FromBody] Cliente cliente)
         {
@@ -64,7 +70,7 @@ namespace TesteBackend.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState); // Retorna 400 Bad Request se o modelo não for válido
+                    return BadRequest(ModelState);
                 }
 
                 using (MySqlConnection connection = new MySqlConnection(_connectionString))
@@ -96,11 +102,12 @@ namespace TesteBackend.Controllers
         }
         public class Cliente
         {
+            // Inicio das validações Obrigatórias do metodo POST
+            
             public int Id { get; set; } // Id será preenchido automaticamente pelo banco de dados
             [Required(ErrorMessage = "O campo NomeCompleto é obrigatório.")]
             public string NomeCompleto { get; set; }
             [Required(ErrorMessage = "O campo DataNascimento é obrigatório.")]
-            
             public DateTime DataNascimento { get; set; }
             [Required(ErrorMessage = "O campo TipoPessoa é obrigatório.")]
             [RegularExpression("^(F|J)$", ErrorMessage = "O campo TipoPessoa deve ser 'F' (Física) ou 'J' (Jurídica).")]
